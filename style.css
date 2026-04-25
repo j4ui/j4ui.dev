@@ -229,6 +229,9 @@ a.about-stat { text-decoration: none; }
 a.about-stat:hover { background: var(--surface); }
 a.about-stat:hover .about-stat-value { color: var(--text); }
 
+.hero-wakatime { margin-top: 1.5rem; }
+.hero-wakatime img { display: block; }
+
 /* PROJECTS */
 .projects-section {
   padding: 3.5rem 0;
