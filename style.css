@@ -8,6 +8,8 @@
   --muted: #8087a2;
   --dim: #6e738d;
   --accent: #b7bdf8;
+  --green: #a6da95;
+  --red: #ed8796;
 }
 
 html { scroll-behavior: smooth; }
@@ -231,6 +233,29 @@ a.about-stat:hover .about-stat-value { color: var(--text); }
 
 .hero-wakatime { margin-top: 1.5rem; }
 .hero-wakatime img { display: block; }
+
+.diff-add { color: var(--green); font-family: 'DM Mono', monospace; font-size: 12px; }
+.diff-del { color: var(--red); font-family: 'DM Mono', monospace; font-size: 12px; }
+
+.commit-value {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+.commit-repo {
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  color: var(--accent);
+}
+
+.commit-msg {
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  color: var(--muted);
+}
 
 /* PROJECTS */
 .projects-section {

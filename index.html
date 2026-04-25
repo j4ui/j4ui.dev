@@ -90,6 +90,15 @@
             <span class="about-stat-label">competitions</span>
             <span class="about-stat-value">3</span>
           </div>
+          <div class="about-stat" id="latest-commit" style="display:none;">
+            <span class="about-stat-label">latest commit</span>
+            <span class="about-stat-value commit-value">
+              <span class="commit-repo" id="commit-repo"></span>
+              <span class="commit-msg" id="commit-msg"></span>
+              <span class="diff-add" id="commit-add"></span>
+              <span class="diff-del" id="commit-del"></span>
+            </span>
+          </div>
         </div>
       </div>
     </section>
@@ -209,5 +218,29 @@
     </footer>
 
   </div>
+  <script>
+    (async () => {
+      try {
+        const events = await fetch('https://api.github.com/users/j4ui/events/public').then(r => r.json());
+        const push = events.find(e => e.type === 'PushEvent' && e.payload.commits?.length);
+        if (!push) return;
+
+        const repo = push.repo.name.split('/')[1];
+        const sha = push.payload.commits.at(-1).sha;
+
+        const commit = await fetch(`https://api.github.com/repos/j4ui/${repo}/commits/${sha}`).then(r => r.json());
+        if (!commit.stats) return;
+
+        const msg = commit.commit.message.split('\n')[0].slice(0, 40);
+        const { additions, deletions } = commit.stats;
+
+        document.getElementById('commit-repo').textContent = repo;
+        document.getElementById('commit-msg').textContent = msg;
+        document.getElementById('commit-add').textContent = `+${additions}`;
+        document.getElementById('commit-del').textContent = `-${deletions}`;
+        document.getElementById('latest-commit').style.display = '';
+      } catch {}
+    })();
+  </script>
 </body>
 </html>
