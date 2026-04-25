@@ -26,4 +26,4 @@ jobs:
 
       - name: Deploy
         run: |
-          ssh ${{ secrets.SERVER_USER }}@ssh.j4ui.dev "cd /var/www/j4ui.dev && git pull origin main && sudo systemctl reload nginx"
+          ssh ${{ secrets.SERVER_USER }}@ssh.j4ui.dev "cd /var/www/j4ui.dev && git pull origin main && sed -i 's/CACHE_BUST/'"$(git rev-parse --short HEAD)"'/g' index.html && sudo systemctl reload nginx"
