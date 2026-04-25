@@ -38,6 +38,12 @@
         <a href="https://wakatime.com/@6ad91061-e0bb-4faf-bca7-fba8c7bfa76a" target="_blank">
           <img src="https://wakatime.com/badge/user/6ad91061-e0bb-4faf-bca7-fba8c7bfa76a.svg" alt="Total time coded since May 8 2024">
         </a>
+        <p id="latest-commit" style="display:none;">
+          <a class="commit-repo" id="commit-repo" target="_blank"></a>
+          <a class="commit-msg" id="commit-msg" target="_blank"></a>
+          <span class="diff-add" id="commit-add"></span>
+          <span class="diff-del" id="commit-del"></span>
+        </p>
       </div>
     </section>
 
@@ -89,15 +95,6 @@
           <div class="about-stat">
             <span class="about-stat-label">competitions</span>
             <span class="about-stat-value">3</span>
-          </div>
-          <div class="about-stat" id="latest-commit" style="display:none;">
-            <span class="about-stat-label">latest commit</span>
-            <span class="about-stat-value commit-value">
-              <span class="commit-repo" id="commit-repo"></span>
-              <span class="commit-msg" id="commit-msg"></span>
-              <span class="diff-add" id="commit-add"></span>
-              <span class="diff-del" id="commit-del"></span>
-            </span>
           </div>
         </div>
       </div>
@@ -234,8 +231,14 @@
         const msg = commit.commit.message.split('\n')[0].slice(0, 40);
         const { additions, deletions } = commit.stats;
 
-        document.getElementById('commit-repo').textContent = repo;
-        document.getElementById('commit-msg').textContent = msg;
+        const repoEl = document.getElementById('commit-repo');
+        repoEl.textContent = repo;
+        repoEl.href = `https://github.com/j4ui/${repo}`;
+
+        const msgEl = document.getElementById('commit-msg');
+        msgEl.textContent = msg;
+        msgEl.href = `https://github.com/j4ui/${repo}/commit/${sha}`;
+
         document.getElementById('commit-add').textContent = `+${additions}`;
         document.getElementById('commit-del').textContent = `-${deletions}`;
         document.getElementById('latest-commit').style.display = '';
