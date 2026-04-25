@@ -1,1 +1,432 @@
-<h1>Coming soon</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>aaron avdeev</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0c0c0c;
+      --surface: #111111;
+      --border: #1e1e1e;
+      --text: #d4d4d4;
+      --muted: #555;
+      --dim: #333;
+      --accent: #c8c8c8;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* subtle grain overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 999;
+      opacity: 0.35;
+    }
+
+    .container {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    /* NAV */
+    nav {
+      padding: 2.5rem 0 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards;
+    }
+
+    .nav-name {
+      font-family: 'DM Mono', monospace;
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--text);
+      letter-spacing: 0.02em;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.05em;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--text); }
+
+    /* HERO */
+    .hero {
+      padding: 5rem 0 4rem;
+      border-bottom: 1px solid var(--border);
+      opacity: 0;
+      animation: fadeUp 0.6s ease 0.1s forwards;
+    }
+
+    .hero-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-name {
+      font-family: 'DM Mono', monospace;
+      font-size: clamp(32px, 5vw, 48px);
+      font-weight: 300;
+      line-height: 1.15;
+      color: var(--accent);
+      margin-bottom: 1.75rem;
+    }
+
+    .hero-name .dim { color: var(--dim); }
+
+    .hero-desc {
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.8;
+      max-width: 420px;
+      margin-bottom: 2.5rem;
+    }
+
+    .hero-links {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .btn {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      padding: 9px 18px;
+      border-radius: 3px;
+      text-decoration: none;
+      letter-spacing: 0.03em;
+      transition: all 0.2s;
+      display: inline-block;
+    }
+
+    .btn-primary {
+      background: var(--text);
+      color: var(--bg);
+      border: 1px solid var(--text);
+    }
+
+    .btn-primary:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+
+    .btn-ghost:hover {
+      color: var(--text);
+      border-color: var(--dim);
+    }
+
+    /* PROJECTS */
+    .projects-section {
+      padding: 3.5rem 0;
+      opacity: 0;
+      animation: fadeUp 0.6s ease 0.2s forwards;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .section-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    .section-line {
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .projects {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .project-card {
+      background: var(--bg);
+      padding: 1.75rem 2rem;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0 1.5rem;
+      transition: background 0.15s;
+      text-decoration: none;
+    }
+
+    .project-card:hover { background: var(--surface); }
+
+    .project-num {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--dim);
+      padding-top: 3px;
+      min-width: 20px;
+    }
+
+    .project-content {}
+
+    .project-top {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+    }
+
+    .project-title {
+      font-family: 'DM Mono', monospace;
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--accent);
+    }
+
+    .project-arrow {
+      font-size: 12px;
+      color: var(--dim);
+      transition: color 0.2s, transform 0.2s;
+    }
+
+    .project-card:hover .project-arrow {
+      color: var(--muted);
+      transform: translate(2px, -2px);
+    }
+
+    .project-desc {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 1rem;
+    }
+
+    .project-tags {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      color: var(--dim);
+      border: 1px solid var(--border);
+      padding: 3px 8px;
+      border-radius: 2px;
+      letter-spacing: 0.05em;
+    }
+
+    /* FOOTER */
+    footer {
+      padding: 2.5rem 0 3rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      opacity: 0;
+      animation: fadeUp 0.6s ease 0.3s forwards;
+    }
+
+    .footer-left {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .footer-text {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--dim);
+    }
+
+    .footer-disclaimer {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      color: #2a2a2a;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .footer-links a {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--dim);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--muted); }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 520px) {
+      .container { padding: 0 1.25rem; }
+      .hero { padding: 3.5rem 0 3rem; }
+      .project-card { padding: 1.25rem 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <nav>
+      <span class="nav-name">aaron avdeev</span>
+      <ul class="nav-links">
+        <li><a href="#work">work</a></li>
+        <li><a href="https://github.com/j4ui" target="_blank">github</a></li>
+      </ul>
+    </nav>
+
+    <section class="hero">
+      <p class="hero-label">software developer</p>
+      <h1 class="hero-name">
+        building things<br>
+        <span class="dim">for fun.</span>
+      </h1>
+      <p class="hero-desc">
+        I make stuff, mostly Minecraft mods and the occasional server project.
+        Still learning, always curious.
+      </p>
+      <div class="hero-links">
+        <a href="#work" class="btn btn-primary">see my work</a>
+        <a href="https://github.com/j4ui" target="_blank" class="btn btn-ghost">github →</a>
+      </div>
+    </section>
+
+    <section class="projects-section" id="work">
+      <div class="section-header">
+        <span class="section-label">selected work</span>
+        <div class="section-line"></div>
+      </div>
+
+      <div class="projects">
+
+        <a class="project-card" href="https://github.com/j4ui/Splitting-souls" target="_blank">
+          <span class="project-num">01</span>
+          <div class="project-content">
+            <div class="project-top">
+              <span class="project-title">splitting souls</span>
+              <span class="project-arrow">↗</span>
+            </div>
+            <p class="project-desc">
+              A Minecraft Fabric mod adding soul clone mechanics. Place a clone of yourself in the world and swap positions with it at will. Includes custom items, loot table injection across multiple biomes, and persistent data management across server restarts.
+            </p>
+            <div class="project-tags">
+              <span class="tag">java</span>
+              <span class="tag">fabric</span>
+              <span class="tag">minecraft</span>
+              <span class="tag">1.21.8</span>
+            </div>
+          </div>
+        </a>
+
+        <a class="project-card" href="https://github.com/j4ui/j4ui.dev" target="_blank">
+          <span class="project-num">02</span>
+          <div class="project-content">
+            <div class="project-top">
+              <span class="project-title">j4ui.dev</span>
+              <span class="project-arrow">↗</span>
+            </div>
+            <p class="project-desc">
+              This site, self-hosted on a Fedora server at home. Nginx serves the files, Cloudflare Tunnel handles routing without any open ports, and GitHub Actions auto-deploys on every push to main.
+            </p>
+            <div class="project-tags">
+              <span class="tag">linux</span>
+              <span class="tag">nginx</span>
+              <span class="tag">cloudflare</span>
+              <span class="tag">github actions</span>
+            </div>
+          </div>
+        </a>
+
+        <a class="project-card" href="https://github.com/j4ui/Tameable_Foxes" target="_blank">
+          <span class="project-num">03</span>
+          <div class="project-content">
+            <div class="project-top">
+              <span class="project-title">tameable foxes</span>
+              <span class="project-arrow">↗</span>
+            </div>
+            <p class="project-desc">
+              A friend's Minecraft mod that I'm contributing to. Makes foxes tameable via mixins and custom NBT data. Feed a fox bamboo for a 15% chance to tame it, with ownership persisting across server restarts.
+            </p>
+            <div class="project-tags">
+              <span class="tag">java</span>
+              <span class="tag">fabric</span>
+              <span class="tag">mixins</span>
+              <span class="tag">nbt</span>
+            </div>
+          </div>
+        </a>
+
+      </div>
+    </section>
+
+    <footer>
+      <div class="footer-left">
+        <span class="footer-text">© 2026 aaron avdeev</span>
+        <span class="footer-disclaimer">built with help from claude</span>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/j4ui" target="_blank">github</a>
+        <a href="mailto:underio3298@gmail.com">email</a>
+      </div>
+    </footer>
+
+  </div>
+</body>
+</html>
