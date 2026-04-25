@@ -9,7 +9,13 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy via Cloudflare Tunnel
+      - name: Install cloudflared
+        run: |
+          curl -L https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 -o cloudflared
+          chmod +x cloudflared
+          sudo mv cloudflared /usr/local/bin/
+
+      - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ssh.j4ui.dev
@@ -19,6 +25,7 @@ jobs:
           proxy_port: 443
           proxy_username: ${{ secrets.SERVER_USER }}
           proxy_key: ${{ secrets.SERVER_SSH_KEY }}
+          ssh_args: -o ProxyCommand="cloudflared access ssh --hostname ssh.j4ui.dev"
           script: |
             cd /var/www/j4ui.dev
             git pull origin main
