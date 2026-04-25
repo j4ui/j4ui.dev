@@ -222,11 +222,11 @@
     (async () => {
       try {
         const events = await fetch('https://api.github.com/users/j4ui/events/public').then(r => r.json());
-        const push = events.find(e => e.type === 'PushEvent' && e.payload.commits?.length);
+        const push = events.find(e => e.type === 'PushEvent' && e.payload.head);
         if (!push) return;
 
         const repo = push.repo.name.split('/')[1];
-        const sha = push.payload.commits.at(-1).sha;
+        const sha = push.payload.head;
 
         const commit = await fetch(`https://api.github.com/repos/j4ui/${repo}/commits/${sha}`).then(r => r.json());
         if (!commit.stats) return;
