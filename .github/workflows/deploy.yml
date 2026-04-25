@@ -15,17 +15,15 @@ jobs:
           chmod +x cloudflared
           sudo mv cloudflared /usr/local/bin/
 
-      - name: Deploy via SSH
-        uses: appleboy/ssh-action@v1.0.0
-        with:
-          host: ssh.j4ui.dev
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SERVER_SSH_KEY }}
-          proxy_host: ssh.j4ui.dev
-          proxy_port: 443
-          proxy_username: ${{ secrets.SERVER_USER }}
-          proxy_key: ${{ secrets.SERVER_SSH_KEY }}
-          ssh_args: -o ProxyCommand="cloudflared access ssh --hostname ssh.j4ui.dev"
-          script: |
-            cd /var/www/j4ui.dev
-            git pull origin main
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SERVER_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          echo "Host ssh.j4ui.dev
+            ProxyCommand cloudflared access ssh --hostname %h
+            StrictHostKeyChecking no" > ~/.ssh/config
+
+      - name: Deploy
+        run: |
+          ssh ${{ secrets.SERVER_USER }}@ssh.j4ui.dev "cd /var/www/j4ui.dev && git pull origin main"
